@@ -1735,20 +1735,19 @@ local SettingsButton = SetProps(CloseButton:Clone(), {
 
 SetChildren(ButtonsFolder, {CloseButton, MinimizeButton, SettingsButton})
 
-task.spawn(function()
-    repeat task.wait() until #Window.TabButtons:GetChildren() > 0
+task.defer(function()
+    repeat task.wait() until Window.MainFrame and Window.Title and Window.SubTitle
 
-    local OriginalContent = {}
-    for _, tab in ipairs(Window.Tabs) do
-        OriginalContent[tab] = tab.Frame:GetChildren()
-    end
+    local OriginalTitle = Window.Title.Text
+    local OriginalSubTitle = Window.SubTitle.Text
 
-    local opened = false
     local SettingsFrame = Instance.new("Frame")
     SettingsFrame.Size = UDim2.new(1,0,1,0)
     SettingsFrame.BackgroundTransparency = 1
     SettingsFrame.Visible = false
     SettingsFrame.Parent = Window.MainFrame
+
+    local opened = false
 
     SettingsButton.Activated:Connect(function()
         if not opened then
@@ -1764,8 +1763,8 @@ task.spawn(function()
                 tab.Frame.Visible = true
             end
             SettingsFrame.Visible = false
-            Window.Title.Text = Window.OriginalTitle or "BRUTON Lib v2"
-            Window.SubTitle.Text = Window.OriginalSubTitle or "by : BRUTON Hub"
+            Window.Title.Text = OriginalTitle
+            Window.SubTitle.Text = OriginalSubTitle
             opened = false
         end
     end)
