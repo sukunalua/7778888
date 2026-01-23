@@ -1711,68 +1711,69 @@ end)
 		Name = "Buttons"
 	})
 	
-	local CloseButton = Create("ImageButton", {
-	Size = UDim2.new(0, 14, 0, 14),
-	Position = UDim2.new(1, -10, 0.5),
-	AnchorPoint = Vector2.new(1, 0.5),
-	BackgroundTransparency = 1,
-	Image = "rbxassetid://10747384394",
-	AutoButtonColor = false,
-	Name = "Close"
+local CloseButton = Create("ImageButton", {
+    Size = UDim2.new(0, 14, 0, 14),
+    Position = UDim2.new(1, -10, 0.5),
+    AnchorPoint = Vector2.new(1, 0.5),
+    BackgroundTransparency = 1,
+    Image = "rbxassetid://10747384394",
+    AutoButtonColor = false,
+    Name = "Close"
 })
 
 local MinimizeButton = SetProps(CloseButton:Clone(), {
-	Position = UDim2.new(1, -35, 0.5),
-	Image = "rbxassetid://10734896206",
-	Name = "Minimize"
+    Position = UDim2.new(1, -35, 0.5),
+    Image = "rbxassetid://10734896206",
+    Name = "Minimize"
 })
 
 local SettingsButton = SetProps(CloseButton:Clone(), {
-	Position = UDim2.new(1, -60, 0.5),
-	Image = "rbxassetid://10734950309",
-	Name = "Settings"
+    Position = UDim2.new(1, -60, 0.5),
+    Image = "rbxassetid://10734950309",
+    Name = "Settings"
 })
 
 SetChildren(ButtonsFolder, {
-	CloseButton,
-	MinimizeButton,
-	SettingsButton
+    CloseButton,
+    MinimizeButton,
+    SettingsButton
 })
 
 local SettingsTab = Window:MakeTab({
-	Title = "Settings",
-	Icon = "rbxassetid://97255732156702"
+    Title = "Settings",
+    Icon = "rbxassetid://97255732156702"
 })
 
 local DefaultTabButton
-for _,v in ipairs(Window.TabButtons:GetChildren()) do
-	if v:IsA("TextButton") then
-		DefaultTabButton = v
-		break
-	end
+for _, v in ipairs(Window.TabButtons:GetChildren()) do
+    if v:IsA("TextButton") then
+        DefaultTabButton = v
+        break
+    end
 end
 
 local SettingsTabButton
-for _,v in ipairs(Window.TabButtons:GetChildren()) do
-	if v:IsA("TextButton") and v.Text == "Settings" then
-		SettingsTabButton = v
-	end
+for _, v in ipairs(Window.TabButtons:GetChildren()) do
+    if v:IsA("TextButton") and v.Text == "Settings" then
+        SettingsTabButton = v
+        break
+    end
 end
 
 local opened = false
 
 SettingsButton.Activated:Connect(function()
-	if not opened then
-		if SettingsTabButton then
-			SettingsTabButton:Activate()
-		end
-		opened = true
-	else
-		if DefaultTabButton then
-			DefaultTabButton:Activate()
-		end
-		opened = false
-	end
+    if not opened then
+        if SettingsTabButton then
+            SettingsTabButton:Activate()
+        end
+        opened = true
+    else
+        if DefaultTabButton then
+            DefaultTabButton:Activate()
+        end
+        opened = false
+    end
 end)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
