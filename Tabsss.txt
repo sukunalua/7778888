@@ -1711,7 +1711,7 @@ end)
 		Name = "Buttons"
 	})
 	
-local CloseButton = Create("ImageButton", {
+    local CloseButton = Create("ImageButton", {
     Size = UDim2.new(0, 14, 0, 14),
     Position = UDim2.new(1, -10, 0.5),
     AnchorPoint = Vector2.new(1, 0.5),
@@ -1721,55 +1721,9 @@ local CloseButton = Create("ImageButton", {
     Name = "Close"
 })
 
-local MinimizeButton = SetProps(CloseButton:Clone(), {
-    Position = UDim2.new(1, -35, 0.5),
-    Image = "rbxassetid://10734896206",
-    Name = "Minimize"
-})
+SetChildren(ButtonsFolder, {CloseButton})
 
-local SettingsButton = SetProps(CloseButton:Clone(), {
-    Position = UDim2.new(1, -60, 0.5),
-    Image = "rbxassetid://10734950309",
-    Name = "Settings"
-})
 
-SetChildren(ButtonsFolder, {CloseButton, MinimizeButton, SettingsButton})
-
-task.spawn(function()
-    repeat task.wait() until #Window.TabButtons:GetChildren() > 0
-
-    local OriginalContent = {}
-    for _, tab in ipairs(Window.Tabs) do
-        OriginalContent[tab] = tab.Frame:GetChildren()
-    end
-
-    local opened = false
-    local SettingsFrame = Instance.new("Frame")
-    SettingsFrame.Size = UDim2.new(1,0,1,0)
-    SettingsFrame.BackgroundTransparency = 1
-    SettingsFrame.Visible = false
-    SettingsFrame.Parent = Window.MainFrame
-
-    SettingsButton.Activated:Connect(function()
-        if not opened then
-            for _, tab in ipairs(Window.Tabs) do
-                tab.Frame.Visible = false
-            end
-            SettingsFrame.Visible = true
-            Window.Title.Text = "Settings"
-            Window.SubTitle.Text = "by : BRUTON Hub"
-            opened = true
-        else
-            for _, tab in ipairs(Window.Tabs) do
-                tab.Frame.Visible = true
-            end
-            SettingsFrame.Visible = false
-            Window.Title.Text = Window.OriginalTitle or "BRUTON Lib v2"
-            Window.SubTitle.Text = Window.OriginalSubTitle or "by : BRUTON Hub"
-            opened = false
-        end
-    end)
-end)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
 	function Window:CloseBtn()
