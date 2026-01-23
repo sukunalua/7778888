@@ -1740,11 +1740,12 @@ SetChildren(ButtonsFolder, {
 })
 
 task.defer(function()
-    local DefaultTabButton
-    for _, v in ipairs(Window.TabButtons:GetChildren()) do
-        if v:IsA("TextButton") then
-            DefaultTabButton = v
-            break
+    local TabsFolder = Window.Containers
+    local DefaultTabs = {}
+    for _, v in ipairs(TabsFolder:GetChildren()) do
+        if v:IsA("Frame") then
+            v.Visible = true
+            table.insert(DefaultTabs, v)
         end
     end
 
@@ -1753,25 +1754,19 @@ task.defer(function()
         Icon = "rbxassetid://97255732156702"
     })
 
-    local SettingsTabButton
-    for _, v in ipairs(Window.TabButtons:GetChildren()) do
-        if v:IsA("TextButton") and v.Text == "Settings" then
-            SettingsTabButton = v
-            break
-        end
-    end
-
     local opened = false
 
     SettingsButton.Activated:Connect(function()
         if not opened then
-            if SettingsTabButton then
-                SettingsTabButton:Activate()
+            for _, tab in ipairs(DefaultTabs) do
+                tab.Visible = false
             end
+            SettingsTab.Container.Visible = true
             opened = true
         else
-            if DefaultTabButton then
-                DefaultTabButton:Activate()
+            SettingsTab.Container.Visible = false
+            for _, tab in ipairs(DefaultTabs) do
+                tab.Visible = true
             end
             opened = false
         end
