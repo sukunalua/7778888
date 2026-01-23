@@ -1711,66 +1711,74 @@ end)
 		Name = "Buttons"
 	})
 	
-local CloseButton = Create("ImageButton", {
-    Size = UDim2.new(0, 14, 0, 14),
-    Position = UDim2.new(1, -10, 0.5),
-    AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundTransparency = 1,
-    Image = "rbxassetid://10747384394",
-    AutoButtonColor = false,
-    Name = "Close"
+local Window = brutonlib:MakeWindow({
+    Title = "BRUTON Hub",
+    SubTitle = "by : BRUTON Hub"
 })
 
-local MinimizeButton = SetProps(CloseButton:Clone(), {
-    Position = UDim2.new(1, -35, 0.5),
-    Image = "rbxassetid://10734896206",
-    Name = "Minimize"
+local SettingsTab = Window:MakeTab({
+    Title = "Settings",
+    Icon = "rbxassetid://97255732156702"
 })
 
-local SettingsButton = SetProps(CloseButton:Clone(), {
-    Position = UDim2.new(1, -60, 0.5),
-    Image = "rbxassetid://10734950309",
-    Name = "Settings"
-})
-
-SetChildren(ButtonsFolder, {
-    CloseButton,
-    MinimizeButton,
-    SettingsButton
-})
-
-task.defer(function()
-    local TabsFolder = Window.Containers
-    local DefaultTabs = {}
-    for _, v in ipairs(TabsFolder:GetChildren()) do
-        if v:IsA("Frame") then
-            v.Visible = true
-            table.insert(DefaultTabs, v)
-        end
+local DefaultTabButton
+for _, v in ipairs(Window.TabButtons:GetChildren()) do
+    if v:IsA("TextButton") then
+        DefaultTabButton = v
+        break
     end
+end
 
-    local SettingsTab = Window:MakeTab({
-        Title = "Settings",
-        Icon = "rbxassetid://97255732156702"
-    })
+local SettingsTabButton
+for _, v in ipairs(Window.TabButtons:GetChildren()) do
+    if v:IsA("TextButton") and v.Text == "Settings" then
+        SettingsTabButton = v
+        break
+    end
+end
 
-    local opened = false
+local ButtonsFolder = Instance.new("Folder")
+ButtonsFolder.Name = "Buttons"
+ButtonsFolder.Parent = Window.MainFrame
 
-    SettingsButton.Activated:Connect(function()
-        if not opened then
-            for _, tab in ipairs(DefaultTabs) do
-                tab.Visible = false
-            end
-            SettingsTab.Container.Visible = true
-            opened = true
-        else
-            SettingsTab.Container.Visible = false
-            for _, tab in ipairs(DefaultTabs) do
-                tab.Visible = true
-            end
-            opened = false
+local function CreateButton(imgId, pos, name)
+    local btn = Instance.new("ImageButton")
+    btn.Size = UDim2.new(0,14,0,14)
+    btn.Position = pos
+    btn.AnchorPoint = Vector2.new(1,0.5)
+    btn.BackgroundTransparency = 1
+    btn.Image = imgId
+    btn.Name = name
+    btn.AutoButtonColor = false
+    btn.Parent = ButtonsFolder
+    return btn
+end
+
+local CloseButton = CreateButton("rbxassetid://10747384394", UDim2.new(1,-10,0.5,0), "Close")
+local MinimizeButton = CreateButton("rbxassetid://10734896206", UDim2.new(1,-35,0.5,0), "Minimize")
+local SettingsButton = CreateButton("rbxassetid://10734950309", UDim2.new(1,-60,0.5,0), "Settings")
+
+local opened = false
+SettingsButton.Activated:Connect(function()
+    if not opened then
+        if SettingsTabButton then
+            SettingsTabButton:Activate()
         end
-    end)
+        opened = true
+    else
+        if DefaultTabButton then
+            DefaultTabButton:Activate()
+        end
+        opened = false
+    end
+end)
+
+CloseButton.Activated:Connect(function()
+    Window.MainFrame.Visible = false
+end)
+
+MinimizeButton.Activated:Connect(function()
+    Window.MinimizeBtn()
 end)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
