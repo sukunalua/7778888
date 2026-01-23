@@ -1739,29 +1739,26 @@ SetChildren(ButtonsFolder, {
 	SettingsButton
 })
 
-local SettingTabContainer = Instance.new("Frame")
-SettingTabContainer.Size = UDim2.new(1, 0, 1, 0)
-SettingTabContainer.BackgroundTransparency = 1
-SettingTabContainer.Visible = false
-SettingTabContainer.Parent = Window.Container
-
 local SettingsTab
-local SettingsOpened = false
+local LastTab
+local Opened = false
 
-SettingsButton.MouseButton1Click:Connect(function()
-	SettingsOpened = not SettingsOpened
-
-	if SettingsOpened then
-		SettingTabContainer.Visible = true
+SettingsButton.Activated:Connect(function()
+	if not Opened then
+		LastTab = Window.CurrentTab
 		if not SettingsTab then
 			SettingsTab = Window:MakeTab({
 				Title = "Settings",
-				Icon = "rbxassetid://97255732156702",
-				__force_container = SettingTabContainer
+				Icon = "rbxassetid://97255732156702"
 			})
 		end
+		Window:SelectTab(SettingsTab)
+		Opened = true
 	else
-		SettingTabContainer.Visible = false
+		if LastTab then
+			Window:SelectTab(LastTab)
+		end
+		Opened = false
 	end
 end)
 	local Minimized, SaveSize, WaitClick
