@@ -1739,41 +1739,43 @@ SetChildren(ButtonsFolder, {
     SettingsButton
 })
 
-local SettingsTab = Window:MakeTab({
-    Title = "Settings",
-    Icon = "rbxassetid://97255732156702"
-})
-
-local DefaultTabButton
-for _, v in ipairs(Window.TabButtons:GetChildren()) do
-    if v:IsA("TextButton") then
-        DefaultTabButton = v
-        break
-    end
-end
-
-local SettingsTabButton
-for _, v in ipairs(Window.TabButtons:GetChildren()) do
-    if v:IsA("TextButton") and v.Text == "Settings" then
-        SettingsTabButton = v
-        break
-    end
-end
-
-local opened = false
-
-SettingsButton.Activated:Connect(function()
-    if not opened then
-        if SettingsTabButton then
-            SettingsTabButton:Activate()
+task.defer(function()
+    local DefaultTabButton
+    for _, v in ipairs(Window.TabButtons:GetChildren()) do
+        if v:IsA("TextButton") then
+            DefaultTabButton = v
+            break
         end
-        opened = true
-    else
-        if DefaultTabButton then
-            DefaultTabButton:Activate()
-        end
-        opened = false
     end
+
+    local SettingsTab = Window:MakeTab({
+        Title = "Settings",
+        Icon = "rbxassetid://97255732156702"
+    })
+
+    local SettingsTabButton
+    for _, v in ipairs(Window.TabButtons:GetChildren()) do
+        if v:IsA("TextButton") and v.Text == "Settings" then
+            SettingsTabButton = v
+            break
+        end
+    end
+
+    local opened = false
+
+    SettingsButton.Activated:Connect(function()
+        if not opened then
+            if SettingsTabButton then
+                SettingsTabButton:Activate()
+            end
+            opened = true
+        else
+            if DefaultTabButton then
+                DefaultTabButton:Activate()
+            end
+            opened = false
+        end
+    end)
 end)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
