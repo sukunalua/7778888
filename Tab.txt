@@ -1739,36 +1739,30 @@ SetChildren(ButtonsFolder, {
 	SettingsButton
 })
 
-local MainTabs = Create("Frame", MainFrame, {
-	Name = "MainTabs",
-	Size = UDim2.new(1, 0, 1, 0),
-	BackgroundTransparency = 1,
-	Visible = true
-})
+local SettingTabContainer = Instance.new("Frame")
+SettingTabContainer.Size = UDim2.new(1, 0, 1, 0)
+SettingTabContainer.BackgroundTransparency = 1
+SettingTabContainer.Visible = false
+SettingTabContainer.Parent = Window.Container
 
-local SettingsTab = Create("Frame", MainFrame, {
-	Name = "SettingsTab",
-	Size = UDim2.new(1, 0, 1, 0),
-	BackgroundTransparency = 1,
-	Visible = false
-})
-
-local SettingsLabel = Create("TextLabel", SettingsTab, {
-	Size = UDim2.new(1, 0, 0, 40),
-	Position = UDim2.new(0, 0, 0, 10),
-	BackgroundTransparency = 1,
-	Text = "Settings",
-	TextColor3 = Color3.fromRGB(180, 120, 255),
-	TextScaled = true,
-	Font = Enum.Font.GothamBold
-})
-
-local inSettings = false
+local SettingsTab
+local SettingsOpened = false
 
 SettingsButton.MouseButton1Click:Connect(function()
-	inSettings = not inSettings
-	MainTabs.Visible = not inSettings
-	SettingsTab.Visible = inSettings
+	SettingsOpened = not SettingsOpened
+
+	if SettingsOpened then
+		SettingTabContainer.Visible = true
+		if not SettingsTab then
+			SettingsTab = Window:MakeTab({
+				Title = "Settings",
+				Icon = "rbxassetid://97255732156702",
+				__force_container = SettingTabContainer
+			})
+		end
+	else
+		SettingTabContainer.Visible = false
+	end
 end)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
