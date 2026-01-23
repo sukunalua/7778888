@@ -1742,47 +1742,39 @@ SetChildren(ButtonsFolder, {
 task.spawn(function()
     repeat task.wait() until #Window.TabButtons:GetChildren() > 0
 
-    local DefaultTabButton
     local OriginalTabs = {}
     for _, v in ipairs(Window.TabButtons:GetChildren()) do
         if v:IsA("TextButton") then
-            if not DefaultTabButton then
-                DefaultTabButton = v
-            end
             table.insert(OriginalTabs, v)
         end
     end
 
-    local SettingsTab = Window:MakeTab({
-        Title = "Settings",
-        Icon = "rbxassetid://97255732156702"
-    })
-
-    local SettingsTabButton
-    repeat task.wait()
-        for _, v in ipairs(Window.TabButtons:GetChildren()) do
-            if v:IsA("TextButton") and v.Text == "Settings" then
-                SettingsTabButton = v
-            end
-        end
-    until SettingsTabButton
-
+    local DefaultTabButton = OriginalTabs[1]
     local opened = false
+    local SettingsWindowTab
 
     SettingsButton.Activated:Connect(function()
         pcall(function()
             if not opened then
                 for _, tab in ipairs(OriginalTabs) do
-                    if tab ~= SettingsTabButton then
-                        tab.Visible = false
-                    end
+                    tab.Visible = false
                 end
-                SettingsTabButton.Visible = true
-                SettingsTabButton:Activate()
+                if not SettingsWindowTab then
+                    SettingsWindowTab = Window:MakeTab({
+                        Title = Window.Title.Text,
+                        SubTitle = Window.SubTitle.Text,
+                        Icon = "rbxassetid://97255732156702"
+                    })
+                end
+                SettingsWindowTab.TabButton.Visible = true
+                SettingsWindowTab.TabButton:Activate()
                 opened = true
             else
                 for _, tab in ipairs(OriginalTabs) do
                     tab.Visible = true
+                end
+                if SettingsWindowTab then
+                    SettingsWindowTab.TabButton.Visible = false
                 end
                 DefaultTabButton:Activate()
                 opened = false
