@@ -1740,25 +1740,46 @@ SetChildren(ButtonsFolder, {
 })
 
 local SettingsTab
-local LastTab
-local Opened = false
+local SettingsOpened = false
+local PreviousTabs = {}
+
+local function HideTabs()
+	PreviousTabs = {}
+	for _,v in ipairs(Container:GetChildren()) do
+		if v:IsA("Frame") and v.Name == "TabContainer" then
+			if v.Visible then
+				table.insert(PreviousTabs, v)
+			end
+			v.Visible = false
+		end
+	end
+end
+
+local function RestoreTabs()
+	for _,v in ipairs(PreviousTabs) do
+		if v and v.Parent then
+			v.Visible = true
+		end
+	end
+end
 
 SettingsButton.Activated:Connect(function()
-	if not Opened then
-		LastTab = Window.CurrentTab
+	if not SettingsOpened then
+		HideTabs()
 		if not SettingsTab then
 			SettingsTab = Window:MakeTab({
 				Title = "Settings",
 				Icon = "rbxassetid://97255732156702"
 			})
 		end
-		Window:SelectTab(SettingsTab)
-		Opened = true
+		SettingsTab.Container.Visible = true
+		SettingsOpened = true
 	else
-		if LastTab then
-			Window:SelectTab(LastTab)
+		if SettingsTab and SettingsTab.Container then
+			SettingsTab.Container.Visible = false
 		end
-		Opened = false
+		RestoreTabs()
+		SettingsOpened = false
 	end
 end)
 	local Minimized, SaveSize, WaitClick
