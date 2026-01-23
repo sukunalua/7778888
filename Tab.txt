@@ -1739,47 +1739,39 @@ SetChildren(ButtonsFolder, {
 	SettingsButton
 })
 
-local SettingsTab
-local SettingsOpened = false
-local PreviousTabs = {}
+local SettingsTab = Window:MakeTab({
+	Title = "Settings",
+	Icon = "rbxassetid://97255732156702"
+})
 
-local function HideTabs()
-	PreviousTabs = {}
-	for _,v in ipairs(Container:GetChildren()) do
-		if v:IsA("Frame") and v.Name == "TabContainer" then
-			if v.Visible then
-				table.insert(PreviousTabs, v)
-			end
-			v.Visible = false
-		end
+local DefaultTabButton
+for _,v in ipairs(Window.TabButtons:GetChildren()) do
+	if v:IsA("TextButton") then
+		DefaultTabButton = v
+		break
 	end
 end
 
-local function RestoreTabs()
-	for _,v in ipairs(PreviousTabs) do
-		if v and v.Parent then
-			v.Visible = true
-		end
+local SettingsTabButton
+for _,v in ipairs(Window.TabButtons:GetChildren()) do
+	if v:IsA("TextButton") and v.Text == "Settings" then
+		SettingsTabButton = v
 	end
 end
+
+local opened = false
 
 SettingsButton.Activated:Connect(function()
-	if not SettingsOpened then
-		HideTabs()
-		if not SettingsTab then
-			SettingsTab = Window:MakeTab({
-				Title = "Settings",
-				Icon = "rbxassetid://97255732156702"
-			})
+	if not opened then
+		if SettingsTabButton then
+			SettingsTabButton:Activate()
 		end
-		SettingsTab.Container.Visible = true
-		SettingsOpened = true
+		opened = true
 	else
-		if SettingsTab and SettingsTab.Container then
-			SettingsTab.Container.Visible = false
+		if DefaultTabButton then
+			DefaultTabButton:Activate()
 		end
-		RestoreTabs()
-		SettingsOpened = false
+		opened = false
 	end
 end)
 	local Minimized, SaveSize, WaitClick
